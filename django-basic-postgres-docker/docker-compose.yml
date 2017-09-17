@@ -5,11 +5,17 @@ services:
     image: postgres
   web:
     build: .
-    command: python3 manage.py migrate --noinput
     command: python3 code/manage.py runserver 0.0.0.0:8000
 
     ports:
       - "8000:8000"
-
+    volumes:
+      - .:/code
     depends_on:
+      - migration
       - db
+  migration:
+    image: postgres
+    command: python3 code/manage.py migrate --noinput
+    volumes:
+      - .:/code
